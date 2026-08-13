@@ -1,0 +1,13 @@
+﻿services:
+  catalog_db:
+    container_name: catalog-db-dev
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0000
+      POSTGRES_DB: catalog-db
+    restart: always
+    ports: ["7401:5432"] # Host:container
+    volumes: ["postgres_catalog:/var/lib/postgresql/"]
+volumes:
+  postgres_catalog:

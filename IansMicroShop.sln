@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "IansMicroShop\Catalog.API\Catalog.API.csproj", "{D0A8AFF7-DD8F-4BC2-83EC-E2EE73141A53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "src\Services\Catalog\Catalog.API\Catalog.API.csproj", "{D0A8AFF7-DD8F-4BC2-83EC-E2EE73141A53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Application", "IansMicroShop\Catalog.Application\Catalog.Application.csproj", "{1AD0AE59-3047-49A3-A53E-52EE742C1558}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Application", "src\Services\Catalog\Catalog.Application\Catalog.Application.csproj", "{1AD0AE59-3047-49A3-A53E-52EE742C1558}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Domain", "IansMicroShop\Catalog.Domain\Catalog.Domain.csproj", "{C1CE6E1A-95F0-449B-8E0E-7785703D9F40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Domain", "src\Services\Catalog\Catalog.Domain\Catalog.Domain.csproj", "{C1CE6E1A-95F0-449B-8E0E-7785703D9F40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Infrastructure", "IansMicroShop\Catalog.Infrastructure\Catalog.Infrastructure.csproj", "{FDEA97FC-5F75-47D0-9EE8-910D30002FF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Infrastructure", "src\Services\Catalog\Catalog.Infrastructure\Catalog.Infrastructure.csproj", "{FDEA97FC-5F75-47D0-9EE8-910D30002FF4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{63DBC2F4-2837-40A5-AE41-BC808ABC66AC}"
 EndProject

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <ProjectReference Include="..\Catalog.Application\Catalog.Application.csproj" />
+        <ProjectReference Include="..\Catalog.Domain\Catalog.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -13,7 +13,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>IansMicroShop.Infrastructure</RootNamespace>
+        <RootNamespace>Catalog.Application</RootNamespace>
     </PropertyGroup>
 
 </Project>
