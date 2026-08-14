@@ -4,7 +4,7 @@
     image: postgres:18
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 0000
+      POSTGRES_PASSWORD: '12345'
       POSTGRES_DB: catalog-db
     restart: always
     ports: ["7401:5432"] # Host:container
