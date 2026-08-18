@@ -1,4 +1,8 @@
-﻿namespace IansMicroShop.Infrastructure;
+﻿using Catalog.Domain.Repos;
+using Catalog.Infrastructure.Data.Seed;
+using Marten;
+
+namespace Catalog.Infrastructure;
 
 public static class DependencyInjectionExtensions
 {
@@ -8,6 +12,13 @@ public static class DependencyInjectionExtensions
         IConfiguration configuration
     )
     {
+        services.AddMarten(opts =>
+        {
+            opts.Connection(configuration.GetConnectionString("CatalogDb")!);
+            opts.DatabaseSchemaName = "catalog_service";
+        })
+        .InitializeWith<DbInitializer>();
+        services.AddScoped<IRepository, MartenRepository>();
         return services;
     }
 }

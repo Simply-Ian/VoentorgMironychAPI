@@ -1,4 +1,4 @@
-﻿namespace IansMicroShop.Catalog.Application;
+﻿namespace Catalog.Application;
 
 public static class DependencyInjectionExtensions
 {

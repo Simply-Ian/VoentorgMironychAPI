@@ -1,3 +1,3 @@
 ﻿global using Catalog.API;
-global using IansMicroShop.Catalog.Application;
-global using IansMicroShop.Infrastructure;
+global using Catalog.Application;
+global using Catalog.Infrastructure;

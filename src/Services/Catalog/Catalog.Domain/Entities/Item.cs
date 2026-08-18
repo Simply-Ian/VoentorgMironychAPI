@@ -15,7 +15,7 @@ public class Item : BaseEntity
         }
     }
     public Brand? Brand { get; set; }
-    public Category? Category { get; set; }
+    public Category[] Categories { get; set; } = [];
 
     public decimal Price
     {
@@ -25,4 +25,6 @@ public class Item : BaseEntity
             if (value > 0) field = value;
         }
     }
+
+    public bool IsAgeRestricted { get; set; } = false;
 }
