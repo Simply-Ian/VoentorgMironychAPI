@@ -6,6 +6,8 @@ public static class ExtensionMethodsForConfig
         IConfiguration configuration)
     {
         services._registerSwagger();
+        services.AddControllers();
+        services.AddLogging();
         return services;
     }
 
@@ -28,7 +30,8 @@ public static class ExtensionMethodsForConfig
 
     public static WebApplication MapActions(this WebApplication app)
     {
-        app.MapGet("/", () => "Hello World!");
+        // app.MapGet("/", () => "Hello World!");
+        app.MapControllers();
         return app;
     }
 }
