@@ -2,7 +2,7 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
-namespace Catalog.Application.Handlers;
+namespace Catalog.Application.Behaviors;
 
 public class ExceptionActionProcessorBehavior<TRequest, TResponse>
 (
