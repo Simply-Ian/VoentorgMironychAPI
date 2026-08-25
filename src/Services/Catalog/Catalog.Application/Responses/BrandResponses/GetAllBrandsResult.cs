@@ -1,5 +1,5 @@
 using Catalog.Domain.Entities;
 
-namespace Catalog.Application.Responses.BrandResponses;
+namespace Catalog.Application.Responses;
 
 public record GetAllBrandsResult(IEnumerable<Brand> Brands);

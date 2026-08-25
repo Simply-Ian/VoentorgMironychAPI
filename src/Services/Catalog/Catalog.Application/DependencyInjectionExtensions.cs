@@ -1,5 +1,4 @@
 ﻿using Catalog.Application.Behaviors;
-using Catalog.Application.Handlers;
 
 namespace Catalog.Application;
 

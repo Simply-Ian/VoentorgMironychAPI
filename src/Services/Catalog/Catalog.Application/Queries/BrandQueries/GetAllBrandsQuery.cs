@@ -1,4 +1,4 @@
-using Catalog.Application.Responses.BrandResponses;
+using Catalog.Application.Responses;
 using MediatR;
 
 namespace Catalog.Application.Queries;

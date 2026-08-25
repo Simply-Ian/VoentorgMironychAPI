@@ -1,10 +1,10 @@
 using Catalog.Application.Queries;
-using Catalog.Application.Responses.BrandResponses;
+using Catalog.Application.Responses;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Repos;
 using MediatR;
 
-namespace Catalog.Application.Handlers.BrandHandlers;
+namespace Catalog.Application.Handlers;
 
 public class GetAllBrandsQueryHandler(IRepository repo) : IRequestHandler<GetAllBrandsQuery, GetAllBrandsResult>
 {
