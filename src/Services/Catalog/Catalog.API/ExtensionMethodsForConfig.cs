@@ -1,4 +1,6 @@
-﻿namespace Catalog.API;
+﻿using Microsoft.OpenApi;
+
+namespace Catalog.API;
 
 public static class ExtensionMethodsForConfig
 {
@@ -8,13 +10,35 @@ public static class ExtensionMethodsForConfig
         services._registerSwagger();
         services.AddControllers();
         services.AddLogging();
+        services.AddApiVersioning(options =>
+        {
+            options.ReportApiVersions = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new(1, 0);
+        })
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
         return services;
     }
 
     private static void _registerSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(config =>
+        {
+            config.SwaggerDoc
+            (
+                "v1", 
+                new OpenApiInfo
+                {
+                    Title = "Catalog API", 
+                    Version = "v1"
+                }
+            );
+        });
     }
 
     public static WebApplication TurnOnSwagger(this WebApplication app)
@@ -22,7 +46,10 @@ public static class ExtensionMethodsForConfig
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            });
         }
 
         return app;
