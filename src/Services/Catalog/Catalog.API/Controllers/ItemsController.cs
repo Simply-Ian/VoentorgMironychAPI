@@ -14,12 +14,25 @@ public class ItemsController : BaseMediatedController
         => Ok(await Mediator.Send(new GetAllItemsQuery()));
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(typeof(GetItemByIdResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SearchItemsResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointDescription("Поиск разновидности товара по ее Guid")]
-    public async Task<ActionResult<GetItemByIdResult>> GetItemById([FromRoute, Required] Guid id)
+    public async Task<ActionResult<SearchItemsResult>> GetItemById([FromRoute, Required] Guid id)
     {
         var result = await Mediator.Send(new GetItemByIdQuery(id));
-        return result.Item is null ? NotFound() : Ok(result);
+        return result.Items.Any() ? Ok(result) : NotFound();
+    }
+
+    [HttpGet("search-title")]
+    [ProducesResponseType(typeof(SearchItemsResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [EndpointDescription("Поиск разновидности товара по ее названию. В текущей реализации проверяет, содержится ли " +
+                         "переданная подстрока в названии товара, регистр символов не учитывается.\n" +
+                         "Если строка поиска короче 3 символов, возвращает 400 с описанием ошибки")]
+    public async Task<ActionResult<SearchItemsResult>> GetItemsByTitle([FromQuery, Required, MinLength(3)] string title)
+    {
+        var result = await Mediator.Send(new GetItemsByTitleQuery(title));
+        return result.Items.Any() ? Ok(result) : NotFound() ;
     }
 }
