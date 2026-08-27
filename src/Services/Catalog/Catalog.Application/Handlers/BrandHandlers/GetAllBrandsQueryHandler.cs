@@ -1,5 +1,5 @@
 using Catalog.Application.Queries;
-using Catalog.Application.Responses;
+using Catalog.Application.Responses.BrandResponses;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Repos;
 using MediatR;

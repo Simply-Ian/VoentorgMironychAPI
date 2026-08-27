@@ -1,5 +1,5 @@
 using Catalog.Domain.Entities;
 
-namespace Catalog.Application.Responses;
+namespace Catalog.Application.Responses.CategoryResponses;
 
-public record GetAllCategoriesResult(IEnumerable<Category> Result);
+public record GetAllCategoriesResult(IEnumerable<Category> Categories);

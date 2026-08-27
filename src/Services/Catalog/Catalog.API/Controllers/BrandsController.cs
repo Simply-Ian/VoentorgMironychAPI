@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Queries;
-using Catalog.Application.Responses;
+using Catalog.Application.Responses.BrandResponses;
 
 namespace Catalog.API.Controllers;
 
