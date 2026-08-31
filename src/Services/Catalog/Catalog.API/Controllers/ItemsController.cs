@@ -23,7 +23,7 @@ public class ItemsController : BaseMediatedController
         return result.Items.Any() ? Ok(result) : NotFound();
     }
 
-    [HttpGet("search-title")]
+    [HttpGet("search-by-title")]
     [ProducesResponseType(typeof(SearchItemsResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -33,6 +33,18 @@ public class ItemsController : BaseMediatedController
     public async Task<ActionResult<SearchItemsResult>> GetItemsByTitle([FromQuery, Required, MinLength(3)] string title)
     {
         var result = await Mediator.Send(new GetItemsByTitleQuery(title));
+        return result.Items.Any() ? Ok(result) : NotFound() ;
+    }
+
+    [HttpGet("search-by-brand")]
+    [ProducesResponseType(typeof(SearchItemsResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [EndpointDescription("Поиск товаров по названию бренда")]
+    public async Task<ActionResult<SearchItemsResult>> GetItemsByBrandTitle(
+        [FromQuery, Required, MinLength(3)] string title)
+    {
+        var result = await Mediator.Send(new GetItemsByBrandTitleQuery(title));
         return result.Items.Any() ? Ok(result) : NotFound() ;
     }
 }
