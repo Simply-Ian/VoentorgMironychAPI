@@ -1,6 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Catalog.Application.Commands;
+using Catalog.Application.DTO;
 using Catalog.Application.Queries.ItemQueries;
 using Catalog.Application.Responses.ItemResponses;
+using Catalog.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;
@@ -46,5 +49,20 @@ public class ItemsController : BaseMediatedController
     {
         var result = await Mediator.Send(new GetItemsByBrandTitleQuery(title));
         return result.Items.Any() ? Ok(result) : NotFound() ;
+    }
+    
+    [HttpPost]
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [EndpointDescription(
+        "Создает элемент каталога. Все указанные в запросе ID бренда и категорий должны принадлежать " +
+        "существующим брендам/категориям, иначе вернет 400. Также проверяет Url картинки на валидность " +
+        "и цену - на положительность")]
+    public async Task<ActionResult<string>> CreateItem([FromBody, Required] ItemDTO item)
+    {
+        // Исключения обрабатываются отдельным Middleware
+        var result = await Mediator.Send(new CreateEntityCommand<ItemDTO, Item>(item));
+        Item createdItem = result.CreatedEntity;
+        return CreatedAtAction(nameof(GetItemById), new {id = createdItem.Id}, item);
     }
 }
