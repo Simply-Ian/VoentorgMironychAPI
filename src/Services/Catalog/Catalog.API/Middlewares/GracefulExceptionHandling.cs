@@ -20,7 +20,7 @@ public class GracefulExceptionHandling(RequestDelegate next)
         }
         catch (Exception exc)
         {
-            await HandleIt(exc, context);
+            if (!await HandleIt(exc, context)) throw;
         }
     }
 
@@ -28,17 +28,21 @@ public class GracefulExceptionHandling(RequestDelegate next)
     /// Обработчик намеренно не включает в себя случай "по умолчанию", т. к. я хочу сохранить преднастроенное
     /// поведение, при котором необработанное исключение выбрасывает 500
     /// </summary>
-    private async Task HandleIt(Exception exception, HttpContext context)
+    private async Task<bool> HandleIt(Exception exception, HttpContext context)
     {
         context.Response.ContentType = "application/json";
         var result = string.Empty;
+        bool isHandled = false;
         switch (exception)
         {
             case ValidationException validationException:
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 result = JsonSerializer.Serialize(validationException.Errors);
+                isHandled = true;
                 break;
         }
-        await context.Response.WriteAsync(result);
+
+        if (isHandled) await context.Response.WriteAsync(result);
+        return isHandled;
     }
 }
