@@ -1,6 +1,6 @@
-namespace Catalog.Application.DTO;
+namespace Catalog.Application.Contracts;
 
-public class ItemDTO
+public class CreateItemContract
 {
     public string? Title { get; set; }
     public string? ShortDescription { get; set; }

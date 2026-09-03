@@ -1,6 +1,6 @@
 ﻿using Catalog.Application.Behaviors;
 using Catalog.Application.Commands;
-using Catalog.Application.DTO;
+using Catalog.Application.Contracts;
 using Catalog.Application.Handlers.GenericHandlers;
 using Catalog.Application.Responses.GenericResponses;
 using Catalog.Application.Validators;
@@ -31,8 +31,8 @@ public static class DependencyInjectionExtensions
                 config.AddOpenBehavior(typeof(ExceptionActionProcessorBehavior<,>));
             }
         )
-        .AddScoped<IRequestHandler<CreateEntityCommand<ItemDTO, Item>, CreatedResult<Item>>, CreateEntityCommandHandler<ItemDTO, Item>>()
-        .AddScoped<IValidator<ItemDTO>, ItemDtoValidator>()
+        .AddScoped<IRequestHandler<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>, CreateEntityCommandHandler<CreateItemContract, Item>>()
+        .AddScoped<IValidator<CreateItemContract>, CreateItemContractValidator>()
         .AddMapster();
         services.ConfigureMapster();
         
@@ -50,7 +50,7 @@ public static class DependencyInjectionExtensions
     private static void ConfigureMapster()
     {
         // Валидация гарантирует, что бренд и все категории существуют
-        TypeAdapterConfig<ItemDTO, Item>
+        TypeAdapterConfig<CreateItemContract, Item>
             .NewConfig()
             .AfterMappingAsync
             (async (dto, entity) =>

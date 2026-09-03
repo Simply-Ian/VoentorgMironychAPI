@@ -11,20 +11,20 @@ using Microsoft.Extensions.Hosting;
 
 namespace Catalog.Application.Handlers.GenericHandlers;
 
-public class CreateEntityCommandHandler<TDto, TEntity>
+public class CreateEntityCommandHandler<TContract, TEntity>
 (
-    IValidator<TDto> validator, 
-    ILogger<CreateEntityCommandHandler<TDto, TEntity>> logger,
+    IValidator<TContract> validator, 
+    ILogger<CreateEntityCommandHandler<TContract, TEntity>> logger,
     IHostEnvironment environment,
     IRepository repo,
     IMapper mapper
-) : IRequestHandler<CreateEntityCommand<TDto, TEntity>, CreatedResult<TEntity>> 
+) : IRequestHandler<CreateEntityCommand<TContract, TEntity>, CreatedResult<TEntity>> 
     where TEntity: BaseEntity
-    where TDto : class
+    where TContract : class
 {
-    public async Task<CreatedResult<TEntity>> Handle(CreateEntityCommand<TDto, TEntity> request, CancellationToken cancellationToken)
+    public async Task<CreatedResult<TEntity>> Handle(CreateEntityCommand<TContract, TEntity> request, CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(request.Dto, cancellationToken);
+        var validationResult = await validator.ValidateAsync(request.Contract, cancellationToken);
         if (!validationResult.IsValid)
         {
             if (environment.IsDevelopment()) 
@@ -34,12 +34,12 @@ public class CreateEntityCommandHandler<TDto, TEntity>
                     "Class: {objClass}\n" +
                     "DTO contents: {DTO}\n" + 
                     "Validation issues: {ValidationErrors}",
-                    typeof(TDto).Name, request.Dto, validationResult.Errors
+                    typeof(TContract).Name, request.Contract, validationResult.Errors
                 );
             throw new ValidationException(validationResult.Errors);
         }
 
-        var newEntity = await mapper.From(request.Dto).AdaptToTypeAsync<TEntity>();
+        var newEntity = await mapper.From(request.Contract).AdaptToTypeAsync<TEntity>();
         await repo.SaveAsync(newEntity);
         return new CreatedResult<TEntity>(newEntity);
     }
