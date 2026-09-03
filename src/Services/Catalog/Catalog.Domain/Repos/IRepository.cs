@@ -6,6 +6,9 @@ namespace Catalog.Domain.Repos;
 public interface IRepository
 {
     Task<IEnumerable<T>> GetAllAsync<T>() where T: BaseEntity;
+    
+    /// <returns>Экземпляр сущности T, обладающей указанным id, или null,
+    /// если таковой не существует</returns>
     Task<T?> GetByIdAsync<T>(Guid id) where T: BaseEntity;
     Task<IEnumerable<T>> GetBySelectorAsync<T>(Expression<Func<T, bool>> selector) where T : BaseEntity;
     

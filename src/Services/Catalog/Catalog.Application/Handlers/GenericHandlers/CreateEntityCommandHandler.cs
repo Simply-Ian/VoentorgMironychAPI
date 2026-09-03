@@ -24,7 +24,25 @@ public class CreateEntityCommandHandler<TContract, TEntity>
 {
     public async Task<CreatedResult<TEntity>> Handle(CreateEntityCommand<TContract, TEntity> request, CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(request.Contract, cancellationToken);
+        await _validateRequest(request);
+        var newEntity = await mapper.From(request.Contract).AdaptToTypeAsync<TEntity>();
+        await repo.SaveAsync(newEntity);
+        return new CreatedResult<TEntity>(newEntity);
+    }
+
+    /// <summary>
+    /// Проверяет на корректность переданную команду и в случае неудачной проверки выбрасывает ValidationException
+    /// с описанием ошибок
+    /// </summary>
+    /// <param name="generalizedRequest"></param>
+    private async Task _validateRequest<TRequest>(TRequest generalizedRequest)
+    {
+        if (generalizedRequest is not CreateEntityCommand<TContract, TEntity> request) 
+            throw new ArgumentException(
+                $"Unable to cast request of type {nameof(TRequest)} to " +
+                $"{typeof(CreateEntityCommand<TContract, TEntity>).Name}"
+            );
+        var validationResult = await validator.ValidateAsync(request.Contract);
         if (!validationResult.IsValid)
         {
             if (environment.IsDevelopment()) 
@@ -38,9 +56,5 @@ public class CreateEntityCommandHandler<TContract, TEntity>
                 );
             throw new ValidationException(validationResult.Errors);
         }
-
-        var newEntity = await mapper.From(request.Contract).AdaptToTypeAsync<TEntity>();
-        await repo.SaveAsync(newEntity);
-        return new CreatedResult<TEntity>(newEntity);
     }
 }

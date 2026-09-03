@@ -8,6 +8,7 @@ using Catalog.Domain.Entities;
 using Catalog.Domain.Repos;
 using FluentValidation;
 using Mapster;
+using MapsterMapper;
 using MediatR;
 
 namespace Catalog.Application;
@@ -32,9 +33,11 @@ public static class DependencyInjectionExtensions
             }
         )
         .AddScoped<IRequestHandler<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>, CreateEntityCommandHandler<CreateItemContract, Item>>()
+        .AddScoped<IRequestHandler<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>, 
+            CreateEntityCommandHandler<CreateItemContract, Item>>()
         .AddScoped<IValidator<CreateItemContract>, CreateItemContractValidator>()
-        .AddMapster();
-        services.ConfigureMapster();
+        .ConfigureMapster()
+        .AddTransient<IMapper, ServiceMapper>();
         
         return services;
     }
@@ -43,15 +46,14 @@ public static class DependencyInjectionExtensions
     {
         var config = new TypeAdapterConfig();
         services.AddSingleton(config);
-        ConfigureMapster();
+        _createConfigurations(config);
         return services;
     }
     
-    private static void ConfigureMapster()
+    private static void _createConfigurations(TypeAdapterConfig config)
     {
         // Валидация гарантирует, что бренд и все категории существуют
-        TypeAdapterConfig<CreateItemContract, Item>
-            .NewConfig()
+            config.NewConfig<CreateItemContract, Item>()
             .AfterMappingAsync
             (async (dto, entity) =>
                 {
@@ -59,7 +61,7 @@ public static class DependencyInjectionExtensions
                     entity.Brand = dto.BrandId == null ? null : await repo.GetByIdAsync<Brand>(dto.BrandId.Value);
                     entity.Categories = (await Task.WhenAll(
                                 dto.CategoryIds?.Select(
-                                    repo.GetByIdAsync<Category>
+                                    id => repo.GetByIdAsync<Category>(id)
                                 ) ?? []
                             )
                         )!;
