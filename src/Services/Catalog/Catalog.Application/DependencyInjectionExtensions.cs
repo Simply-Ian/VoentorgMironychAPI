@@ -32,9 +32,10 @@ public static class DependencyInjectionExtensions
                 config.AddOpenBehavior(typeof(ExceptionActionProcessorBehavior<,>));
             }
         )
-        .AddScoped<IRequestHandler<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>, CreateEntityCommandHandler<CreateItemContract, Item>>()
         .AddScoped<IRequestHandler<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>, 
             CreateEntityCommandHandler<CreateItemContract, Item>>()
+        .AddScoped<IRequestHandler<UpdateEntityCommand<CreateItemContract, Item>>, 
+            UpdateEntityCommandHandler<CreateItemContract, Item>>()
         .AddScoped<IValidator<CreateItemContract>, CreateItemContractValidator>()
         .ConfigureMapster()
         .AddTransient<IMapper, ServiceMapper>();

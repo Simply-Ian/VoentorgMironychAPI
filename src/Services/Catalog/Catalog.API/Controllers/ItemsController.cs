@@ -4,6 +4,7 @@ using Catalog.Application.Contracts;
 using Catalog.Application.Queries.ItemQueries;
 using Catalog.Application.Responses.ItemResponses;
 using Catalog.Domain.Entities;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;
@@ -53,7 +54,7 @@ public class ItemsController : BaseMediatedController
     
     [HttpPost]
     [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), StatusCodes.Status400BadRequest)] // См. middleware GracefulExceptionsHandling
     [EndpointDescription(
         "Создает элемент каталога. Все указанные в запросе ID бренда и категорий должны принадлежать " +
         "существующим брендам/категориям, иначе вернет 400. Также проверяет Url картинки на валидность " +
@@ -64,5 +65,19 @@ public class ItemsController : BaseMediatedController
         var result = await Mediator.Send(new CreateEntityCommand<CreateItemContract, Item>(item));
         Item createdItem = result.CreatedEntity;
         return CreatedAtAction(nameof(GetItemById), new {id = createdItem.Id}, item);
+    }
+
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<ValidationFailure>),
+        StatusCodes.Status400BadRequest)] // См. middleware GracefulExceptionsHandling
+    [EndpointDescription(
+        $"Обновляет элемент каталога. Помимо валидации, аналогичной {nameof(CreateItem)}, проверяет, " +
+        $"существует ли элемент с указанным Id.")]
+    public async Task<ActionResult> UpdateItem([FromRoute, Required] Guid id,
+        [FromBody, Required] CreateItemContract item)
+    {
+        await Mediator.Send(new UpdateEntityCommand<CreateItemContract, Item>(id, item));
+        return Ok();
     }
 }
