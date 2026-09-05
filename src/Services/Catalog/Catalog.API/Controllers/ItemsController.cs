@@ -2,8 +2,10 @@ using System.ComponentModel.DataAnnotations;
 using Catalog.Application.Commands;
 using Catalog.Application.Contracts;
 using Catalog.Application.Queries.ItemQueries;
+using Catalog.Application.Responses.GenericResponses;
 using Catalog.Application.Responses.ItemResponses;
 using Catalog.Domain.Entities;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,4 +82,20 @@ public class ItemsController : BaseMediatedController
         await Mediator.Send(new UpdateEntityCommand<CreateItemContract, Item>(id, item));
         return Ok();
     }
+    
+    // Статус-коды по REST.
+    /// <returns>Результат содержит единственное булево поле: true, если удаление увенчалось успехом,
+    /// false - если не удалось из-за внутренней ошибки</returns>
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> DeleteItem([FromRoute, Required] Guid id)
+    {
+        DeleteEntityByIdResult result = await Mediator.Send(new DeleteEntityCommand<Item>(id));
+        if (result.IsSuccess) return NoContent();
+        if (result.Reason is FluentValidation.ValidationException) return NotFound();
+        return StatusCode(500, result.IsSuccess);
+    }
+    
 }

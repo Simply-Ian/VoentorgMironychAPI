@@ -36,6 +36,7 @@ public static class DependencyInjectionExtensions
             CreateEntityCommandHandler<CreateItemContract, Item>>()
         .AddScoped<IRequestHandler<UpdateEntityCommand<CreateItemContract, Item>>, 
             UpdateEntityCommandHandler<CreateItemContract, Item>>()
+        .AddScoped<IRequestHandler<DeleteEntityCommand<Item>, DeleteEntityByIdResult>, DeleteEntityCommandHandler<Item>>()
         .AddScoped<IValidator<CreateItemContract>, CreateItemContractValidator>()
         .ConfigureMapster()
         .AddTransient<IMapper, ServiceMapper>();

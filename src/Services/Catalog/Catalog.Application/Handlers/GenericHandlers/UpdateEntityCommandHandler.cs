@@ -19,7 +19,7 @@ public class UpdateEntityCommandHandler<TContract, TEntity>
     IHostEnvironment environment,
     IRepository repo,
     IMapper mapper
-) : IRequestHandler<UpdateEntityCommand<TContract, TEntity>> 
+) : ExistenceChecker(repo), IRequestHandler<UpdateEntityCommand<TContract, TEntity>>
     where TEntity : BaseEntity
     where TContract : class
 {
@@ -34,7 +34,7 @@ public class UpdateEntityCommandHandler<TContract, TEntity>
     private async Task _validateRequest(UpdateEntityCommand<TContract, TEntity> request)
     {
         ValidationResult validationResult;
-        if (! await _assureEntityExists(request.Id))
+        if (! await _assureEntityExists<TEntity>(request.Id))
             validationResult = new([new ValidationFailure(
                 "id", 
                 $"Specified entity of type {nameof(TEntity)} does not exist"
@@ -61,6 +61,4 @@ public class UpdateEntityCommandHandler<TContract, TEntity>
             throw new ValidationException(validationResult.Errors);
         }
     }
-
-    private async Task<bool> _assureEntityExists(Guid id) => await repo.GetByIdAsync<TEntity>(id) != null;
 }
