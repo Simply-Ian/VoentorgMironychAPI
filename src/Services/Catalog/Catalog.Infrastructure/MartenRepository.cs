@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Repos;
+using Catalog.Domain.Specifications;
 using Marten;
 
 namespace Catalog.Infrastructure;
@@ -25,5 +26,22 @@ public class MartenRepository(IDocumentSession session) :
     {
         session.Delete<T>(id);
         await session.SaveChangesAsync();
+    }
+
+    public async Task<int> CountAsync<T>() where T : BaseEntity => await session.Query<T>().CountAsync();
+    public async Task<PaginatedResponse<T>> GetPaginatedResponse<T>(int pageIndex, int pageSize) where T : BaseEntity
+    {
+        var query = session.Query<T>();
+        var queriedContent = await query
+            .OrderBy(entry => entry.Id)
+            .Skip(pageIndex*pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        return new PaginatedResponse<T>(
+            queriedContent, 
+            pageSize, 
+            pageIndex, 
+            PaginatedResponse<T>.CalculatePagesCount(await query.CountAsync(), pageSize)
+        );
     }
 }

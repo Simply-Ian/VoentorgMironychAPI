@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Catalog.Domain.Entities;
+using Catalog.Domain.Specifications;
 
 namespace Catalog.Domain.Repos;
 
@@ -19,4 +20,8 @@ public interface IRepository
     Task SaveAsync<T>(T item) where T: BaseEntity;
     Task DeleteByIdAsync<T>(Guid id) where T: BaseEntity;
     // Если надо, можно добавить удаление по селектору
+    
+    Task<int> CountAsync<T>() where T : BaseEntity;
+    
+    Task<PaginatedResponse<T>> GetPaginatedResponse<T>(int pageIndex, int pageSize) where T : BaseEntity;
 }

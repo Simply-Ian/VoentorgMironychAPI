@@ -38,6 +38,17 @@ public static class ExtensionMethodsForConfig
                     Version = "v1"
                 }
             );
+            config.SwaggerDoc
+            (
+                "v2", 
+                new OpenApiInfo
+                {
+                    Title = "Catalog API", 
+                    Version = "v2"
+                }
+            );
+            
+            config.EnableAnnotations();
         });
     }
 
@@ -49,6 +60,7 @@ public static class ExtensionMethodsForConfig
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
             });
         }
 
@@ -57,7 +69,6 @@ public static class ExtensionMethodsForConfig
 
     public static WebApplication MapActions(this WebApplication app)
     {
-        // app.MapGet("/", () => "Hello World!");
         app.MapControllers();
         return app;
     }
