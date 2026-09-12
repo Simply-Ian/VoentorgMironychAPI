@@ -23,5 +23,5 @@ public interface IRepository
     
     Task<int> CountAsync<T>() where T : BaseEntity;
     
-    Task<PaginatedResponse<T>> GetPaginatedResponse<T>(int pageIndex, int pageSize) where T : BaseEntity;
+    Task<PaginatedResponse<T>> GetPaginatedResponse<T>(QueryArgs args) where T : BaseEntity;
 }

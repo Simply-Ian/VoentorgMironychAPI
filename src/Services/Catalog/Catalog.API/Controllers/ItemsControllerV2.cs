@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Catalog.Application.Queries.ItemQueries;
 using Catalog.Application.Responses.ItemResponses;
+using Catalog.Domain.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -21,9 +22,7 @@ public class ItemsControllerV2 : BaseMediatedController
         "Возвращается, если номер страницы меньше 0 или больше количества страниц, либо размер страницы меньше 1")]
     public async Task<ActionResult<GetItemsWithPaginationResult>> GetItemsWithPagination
     (
-        [FromQuery, SwaggerParameter("0-based индекс страницы", Required = false)]
-        int pageIndex,
-        [FromQuery, SwaggerParameter("Размер страницы, элем.", Required = true)]
-        int pageSize
-    ) => Ok(await Mediator.Send(new GetItemsWithPaginationQuery(pageIndex, pageSize)));
+        [FromQuery]
+        QueryArgs queryArgs
+    ) => Ok(await Mediator.Send(new GetItemsWithPaginationQuery(queryArgs)));
 }
