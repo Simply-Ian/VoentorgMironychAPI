@@ -49,6 +49,8 @@ public static class ExtensionMethodsForConfig
             );
             
             config.EnableAnnotations();
+            
+            config.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Catalog.Domain.xml"));
         });
     }
 
