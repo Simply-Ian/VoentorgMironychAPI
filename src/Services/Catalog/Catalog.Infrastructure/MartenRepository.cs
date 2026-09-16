@@ -39,7 +39,7 @@ public class MartenRepository(IDocumentSession session) :
             queriedContent, 
             args.PageSize, 
             args.PageIndex, 
-            PaginatedResponse<T>.CalculatePagesCount(await query.CountAsync(), args.PageSize)
+            PaginatedResponse<T>.CalculatePagesCount(await CountAsync<T>(), args.PageSize)
         );
     }
 

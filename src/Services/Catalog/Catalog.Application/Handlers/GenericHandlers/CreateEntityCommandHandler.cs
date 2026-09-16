@@ -34,14 +34,8 @@ public class CreateEntityCommandHandler<TContract, TEntity>
     /// Проверяет на корректность переданную команду и в случае неудачной проверки выбрасывает ValidationException
     /// с описанием ошибок
     /// </summary>
-    /// <param name="generalizedRequest"></param>
-    private async Task _validateRequest<TRequest>(TRequest generalizedRequest)
+    private async Task _validateRequest(CreateEntityCommand<TContract, TEntity> request)
     {
-        if (generalizedRequest is not CreateEntityCommand<TContract, TEntity> request) 
-            throw new ArgumentException(
-                $"Unable to cast request of type {nameof(TRequest)} to " +
-                $"{typeof(CreateEntityCommand<TContract, TEntity>).Name}"
-            );
         var validationResult = await validator.ValidateAsync(request.Contract);
         if (!validationResult.IsValid)
         {
