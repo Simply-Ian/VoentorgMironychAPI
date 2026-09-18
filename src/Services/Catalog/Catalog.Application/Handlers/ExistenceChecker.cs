@@ -3,8 +3,8 @@ using Catalog.Domain.Repos;
 
 namespace Catalog.Application.Handlers;
 
-public class ExistenceChecker (IRepository repo)
+public class ExistenceChecker
 {
-    protected async Task<bool> _assureEntityExists<TEntity> (Guid id)
+    public async Task<bool> AssureEntityExists<TEntity> (Guid id, IRepository repo)
         where TEntity: BaseEntity => await repo.GetByIdAsync<TEntity>(id) != null;
 }

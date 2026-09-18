@@ -28,23 +28,40 @@ public static class DependencyInjectionExtensions
             {
                 config.LicenseKey = appConfiguration.GetSection("LicenseKeys").GetSection("MediatR").Value;
                 config.RegisterGenericHandlers = true;
-                // Не регистрирует обобщенные обработчики (см. ниже). Почему?
-                config.RegisterServicesFromAssembly(typeof(CreateEntityCommandHandler<,>).Assembly);
+                // Не регистрирует обобщенные обработчики, потому что ограничение дженерик-параметра
+                // where TContract: class слишком широкое (Камянецкий)
+                config.RegisterServicesFromAssembly(typeof(CreateItemCommandHandler<,>).Assembly);
+                
                 config.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 config.AddOpenBehavior(typeof(ExceptionActionProcessorBehavior<,>));
+                config.AddBehavior<
+                    IPipelineBehavior<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>,
+                    CommandValidationBehavior<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>
+                >();
+                config.AddBehavior<
+                    IPipelineBehavior<UpdateEntityCommand<CreateItemContract, Item>, Unit>,
+                    CommandValidationBehavior<UpdateEntityCommand<CreateItemContract, Item>, Unit>
+                >();
+                config.AddBehavior<
+                    IPipelineBehavior<DeleteEntityCommand<Item>, DeleteEntityByIdResult>,
+                    CommandValidationBehavior<DeleteEntityCommand<Item>, DeleteEntityByIdResult>
+                >();
             }
         )
         #region Handlers
         .AddScoped<IRequestHandler<CreateEntityCommand<CreateItemContract, Item>, CreatedResult<Item>>, 
-            CreateEntityCommandHandler<CreateItemContract, Item>>()
-        .AddScoped<IRequestHandler<UpdateEntityCommand<CreateItemContract, Item>>, 
+            CreateItemCommandHandler<CreateItemContract, Item>>()
+        .AddScoped<IRequestHandler<UpdateEntityCommand<CreateItemContract, Item>, Unit>, 
             UpdateEntityCommandHandler<CreateItemContract, Item>>()
         .AddScoped<IRequestHandler<DeleteEntityCommand<Item>, DeleteEntityByIdResult>, DeleteEntityCommandHandler<Item>>()
         #endregion
         
         #region Validators 
-        .AddScoped<IValidator<CreateItemContract>, CreateItemContractValidator>()
+        .AddScoped<IValidator<CreateEntityCommand<CreateItemContract, Item>>, CreateItemCommandValidator>()
         .AddTransient<IValidator<GetItemsWithPaginationQuery>, GetItemsWithPaginationQueryValidator>()
+        .AddTransient<IValidator<UpdateEntityCommand<CreateItemContract, Item>>, UpdateItemCommandValidator>()
+        .AddTransient<IValidator<DeleteEntityCommand<Item>>, DeleteEntityCommandValidator<Item>>()
+        .AddTransient<IValidator<CreateItemContract>, CreateItemContractValidator>()
         #endregion
         .ConfigureMapster()
         .AddTransient<IMapper, ServiceMapper>(); // ServiceMapper, а не Mapper, чтобы работал DI в методах маппинга
