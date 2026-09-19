@@ -63,7 +63,6 @@ public class ItemsController : BaseMediatedController
         "и цену - на положительность")]
     public async Task<ActionResult<string>> CreateItem([FromBody, Required] CreateItemContract item)
     {
-        // Исключения обрабатываются отдельным Middleware
         var result = await Mediator.Send(new CreateEntityCommand<CreateItemContract, Item>(item));
         Item createdItem = result.CreatedEntity;
         return CreatedAtAction(nameof(GetItemById), new {id = createdItem.Id}, item);
@@ -73,6 +72,7 @@ public class ItemsController : BaseMediatedController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(IEnumerable<ValidationFailure>),
         StatusCodes.Status400BadRequest)] // См. middleware GracefulExceptionsHandling
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [EndpointDescription(
         $"Обновляет элемент каталога. Помимо валидации, аналогичной {nameof(CreateItem)}, проверяет, " +
         $"существует ли элемент с указанным Id.")]
@@ -83,19 +83,14 @@ public class ItemsController : BaseMediatedController
         return Ok();
     }
     
-    // Статус-коды по REST.
-    /// <returns>Результат содержит единственное булево поле: true, если удаление увенчалось успехом,
-    /// false - если не удалось из-за внутренней ошибки</returns>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(bool), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> DeleteItem([FromRoute, Required] Guid id)
     {
-        DeleteEntityByIdResult result = await Mediator.Send(new DeleteEntityCommand<Item>(id));
-        if (result.IsSuccess) return NoContent();
-        if (result.Reason is FluentValidation.ValidationException) return NotFound();
-        return StatusCode(500, result.IsSuccess);
+        await Mediator.Send(new DeleteEntityCommand<Item>(id));
+        return NoContent();
     }
     
 }

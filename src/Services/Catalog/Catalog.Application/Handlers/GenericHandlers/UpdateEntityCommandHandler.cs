@@ -27,6 +27,6 @@ public class UpdateEntityCommandHandler<TContract, TEntity>
         var newEntity = await mapper.MapAsync<TEntity>(request.Contract);
         newEntity.Id = request.Id;
         await repo.SaveAsync(newEntity);
-        return Unit.Value;
+        return default;
     }
 }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FluentValidation;
+using Catalog.Application.Validators; // NotFoundException
 
 namespace Catalog.API.Middlewares;
 
@@ -20,7 +21,7 @@ public class GracefulExceptionHandling(RequestDelegate next)
         }
         catch (Exception exc)
         {
-            if (!await HandleIt(exc, context)) throw;
+            await HandleIt(exc, context);
         }
     }
 
@@ -28,21 +29,24 @@ public class GracefulExceptionHandling(RequestDelegate next)
     /// Обработчик намеренно не включает в себя случай "по умолчанию", т. к. я хочу сохранить преднастроенное
     /// поведение, при котором необработанное исключение выбрасывает 500
     /// </summary>
-    private async Task<bool> HandleIt(Exception exception, HttpContext context)
+    private static async Task HandleIt(Exception exception, HttpContext context)
     {
         context.Response.ContentType = "application/json";
-        var result = string.Empty;
-        bool isHandled = false;
+        string result;
         switch (exception)
         {
             case ValidationException validationException:
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 result = JsonSerializer.Serialize(validationException.Errors);
-                isHandled = true;
                 break;
+            
+            case NotFoundException notFoundException:
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                result = JsonSerializer.Serialize(notFoundException.Errors);
+                break;
+            
+            default: throw exception;
         }
-
-        if (isHandled) await context.Response.WriteAsync(result);
-        return isHandled;
+        await context.Response.WriteAsync(result);
     }
 }

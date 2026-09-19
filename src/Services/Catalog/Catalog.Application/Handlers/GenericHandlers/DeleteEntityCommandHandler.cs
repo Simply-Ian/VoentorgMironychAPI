@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 namespace Catalog.Application.Handlers.GenericHandlers;
 
 public class DeleteEntityCommandHandler<TEntity>(IRepository repo, ILogger<DeleteEntityCommandHandler<TEntity>> logger): 
-    IRequestHandler<DeleteEntityCommand<TEntity>, DeleteEntityByIdResult>
+    IRequestHandler<DeleteEntityCommand<TEntity>, Unit>
     where TEntity : BaseEntity
 {
-    public async Task<DeleteEntityByIdResult> Handle(DeleteEntityCommand<TEntity> request, 
+    public async Task<Unit> Handle(DeleteEntityCommand<TEntity> request, 
         CancellationToken cancellationToken)
     {
         try
@@ -23,8 +23,7 @@ public class DeleteEntityCommandHandler<TEntity>(IRepository repo, ILogger<Delet
         {
             logger.LogError($"An exception occurred while attempting to delete {nameof(TEntity)} with id {request.Id}:" +
                             $"{exc.Message}");
-            return new(false, exc);
         }
-        return new (true);
+        return default;
     }
 }

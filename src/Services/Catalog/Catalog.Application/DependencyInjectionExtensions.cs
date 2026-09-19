@@ -43,8 +43,8 @@ public static class DependencyInjectionExtensions
                     CommandValidationBehavior<UpdateEntityCommand<CreateItemContract, Item>, Unit>
                 >();
                 config.AddBehavior<
-                    IPipelineBehavior<DeleteEntityCommand<Item>, DeleteEntityByIdResult>,
-                    CommandValidationBehavior<DeleteEntityCommand<Item>, DeleteEntityByIdResult>
+                    IPipelineBehavior<DeleteEntityCommand<Item>, Unit>,
+                    CommandValidationBehavior<DeleteEntityCommand<Item>, Unit>
                 >();
             }
         )
@@ -53,12 +53,13 @@ public static class DependencyInjectionExtensions
             CreateItemCommandHandler<CreateItemContract, Item>>()
         .AddScoped<IRequestHandler<UpdateEntityCommand<CreateItemContract, Item>, Unit>, 
             UpdateEntityCommandHandler<CreateItemContract, Item>>()
-        .AddScoped<IRequestHandler<DeleteEntityCommand<Item>, DeleteEntityByIdResult>, DeleteEntityCommandHandler<Item>>()
+        .AddScoped<IRequestHandler<DeleteEntityCommand<Item>, Unit>, DeleteEntityCommandHandler<Item>>()
         #endregion
         
         #region Validators 
         .AddScoped<IValidator<CreateEntityCommand<CreateItemContract, Item>>, CreateItemCommandValidator>()
         .AddTransient<IValidator<GetItemsWithPaginationQuery>, GetItemsWithPaginationQueryValidator>()
+        .AddTransient<IValidator<CommandWithId<Item>>, CommandWithIdValidator<Item>>()
         .AddTransient<IValidator<UpdateEntityCommand<CreateItemContract, Item>>, UpdateItemCommandValidator>()
         .AddTransient<IValidator<DeleteEntityCommand<Item>>, DeleteEntityCommandValidator<Item>>()
         .AddTransient<IValidator<CreateItemContract>, CreateItemContractValidator>()
