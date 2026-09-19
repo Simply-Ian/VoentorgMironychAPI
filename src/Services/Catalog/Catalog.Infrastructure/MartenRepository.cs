@@ -45,15 +45,17 @@ public class MartenRepository(IDocumentSession session) :
 
     private static IQueryable<Item> _makeQuery(IQueryable<Item> query, QueryArgs args)
     {
-        query = query.Where(item => (
-                       string.IsNullOrEmpty(args.SearchString) 
-                    || (!string.IsNullOrEmpty(item.Title) && item.Title.ToLower().Contains(args.SearchString.ToLower()))
-                    || (!string.IsNullOrEmpty(item.ShortDescription) && item.ShortDescription.ToLower().Contains(args.SearchString.ToLower()))
-                    || (!string.IsNullOrEmpty(item.FullDescription) && item.FullDescription.ToLower().Contains(args.SearchString.ToLower()))
-                )
-                && (args.BrandId == null || (item.Brand != null && item.Brand.Id == args.BrandId))
-                && (args.CategoryId == null || item.Categories.Any(cat => cat.Id == args.CategoryId))
-            );
+        if (!string.IsNullOrEmpty(args.SearchString))
+            query = query.Where(item => 
+                (!string.IsNullOrEmpty(item.Title) && item.Title.ToLower().Contains(args.SearchString.ToLower()))
+                || (!string.IsNullOrEmpty(item.ShortDescription) &&
+                    item.ShortDescription.ToLower().Contains(args.SearchString.ToLower()))
+                || (!string.IsNullOrEmpty(item.FullDescription) &&
+                    item.FullDescription.ToLower().Contains(args.SearchString.ToLower())));
+        query = query.Where(item => 
+            (args.BrandId == null || (item.Brand != null && item.Brand.Id == args.BrandId))
+            && (args.CategoryId == null || item.Categories.Any(cat => cat.Id == args.CategoryId))
+        );
         /* Marten не проверяет истинность членов выражения, когда транслирует в SQL; вместо атрибутов программных объектов
         подставляет их значения; поэтому если мы напишем в предыдущем Where-clause что-то вроде
         `... && (args.PriceFilter != null || <цена товара в промежутке>)`
