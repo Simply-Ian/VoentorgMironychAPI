@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Queries;
 using Catalog.Application.Responses.BrandResponses;
+using MediatR;
 
 namespace Catalog.API.Controllers;
 
-public class BrandsController : BaseMediatedController
+public class BrandsController(IMediator mediator) : BaseMediatedController(mediator)
 {
     [HttpGet]
     [ProducesResponseType(typeof(GetAllBrandsResult), StatusCodes.Status200OK)]

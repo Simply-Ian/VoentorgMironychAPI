@@ -2,6 +2,7 @@ using Asp.Versioning;
 using Catalog.Application.Queries.ItemQueries;
 using Catalog.Application.Responses.ItemResponses;
 using Catalog.Domain.Specifications;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,8 +12,7 @@ namespace Catalog.API.Controllers;
 [ApiExplorerSettings(GroupName = "v2")]
 [Route("api/v{version:apiVersion}/items")]
 [SwaggerTag("Контроллер v2 поддерживает пагинацию, в отличие от v1")]
-// Почему в Swagger отображается как ItemsControllerV, без цифры "2"?
-public class ItemsControllerV2 : BaseMediatedController
+public class ItemsControllerV2(IMediator mediator) : BaseMediatedController(mediator)
 {
     [HttpGet]
     [SwaggerResponse(StatusCodes.Status200OK, 

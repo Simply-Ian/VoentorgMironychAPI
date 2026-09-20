@@ -7,11 +7,12 @@ using Catalog.Application.Responses.ItemResponses;
 using Catalog.Domain.Entities;
 using FluentValidation;
 using FluentValidation.Results;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers;
 
-public class ItemsController : BaseMediatedController
+public class ItemsController(IMediator mediator) : BaseMediatedController(mediator)
 {
     [HttpGet]
     [ProducesResponseType(typeof(GetAllItemsResult), StatusCodes.Status200OK)]
