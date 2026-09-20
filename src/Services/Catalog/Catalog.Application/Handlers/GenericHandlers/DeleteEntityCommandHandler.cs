@@ -1,8 +1,6 @@
 using Catalog.Application.Commands;
-using Catalog.Application.Responses.GenericResponses;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Repos;
-using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

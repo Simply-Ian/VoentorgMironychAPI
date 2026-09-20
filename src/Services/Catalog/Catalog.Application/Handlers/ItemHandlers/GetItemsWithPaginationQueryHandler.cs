@@ -13,7 +13,6 @@ public class GetItemsWithPaginationQueryHandler(IRepository repo, IValidator<Get
     public async Task<GetItemsWithPaginationResult> Handle(GetItemsWithPaginationQuery request, CancellationToken cancellationToken)
     {
         await validator.ValidateAndThrowAsync(request, cancellationToken);
-        // TODO: обрабатывать ситуацию, когда строка поиска null
         return await repo.GetPaginatedResponse<Item>(request.Args);
     }
 }
