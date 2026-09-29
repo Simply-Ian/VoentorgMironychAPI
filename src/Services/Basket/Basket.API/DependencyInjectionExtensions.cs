@@ -1,3 +1,4 @@
+using Basket.API.Models;
 using Marten;
 using Microsoft.OpenApi;
 
@@ -55,6 +56,7 @@ public static class DependencyInjectionExtensions
         services.AddMarten(opts =>
         {
             opts.Connection(appConfiguration.GetConnectionString("BasketDb")!);
+            opts.Schema.For<ShoppingCart>().Identity(x => x.AccountName);
         }).UseLightweightSessions();
         return services;
     }
