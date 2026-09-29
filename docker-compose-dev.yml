@@ -9,5 +9,17 @@
     restart: always
     ports: ["7401:5432"] # Host:container
     volumes: ["postgres_catalog:/var/lib/postgresql/"]
+    
+  basket_db:
+    container_name: basket-db-dev
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '12345'
+      POSTGRES_DB: basket-db
+    restart: always
+    ports: [ "7402:5432" ] # Host:container
+    volumes: [ "postgres_basket:/var/lib/postgresql/" ]
 volumes:
   postgres_catalog:
+  postgres_basket:
