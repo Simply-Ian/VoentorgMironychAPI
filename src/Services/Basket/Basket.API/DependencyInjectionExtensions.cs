@@ -1,3 +1,4 @@
+using Basket.API.Behaviors;
 using Basket.API.Models;
 using Marten;
 using Microsoft.OpenApi;
@@ -47,6 +48,7 @@ public static class DependencyInjectionExtensions
             // Не регистрирует обобщенные обработчики, потому что ограничение дженерик-параметра
             // where TContract: class слишком широкое (Камянецкий)
             config.RegisterServicesFromAssembly(typeof(DependencyInjectionExtensions).Assembly);
+            config.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
         });
         return services;
     }
