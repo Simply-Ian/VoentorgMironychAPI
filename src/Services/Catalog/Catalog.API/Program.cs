@@ -1,5 +1,4 @@
-using Catalog.API.Middlewares;
-using Microsoft.AspNetCore.Diagnostics;
+using Common.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
