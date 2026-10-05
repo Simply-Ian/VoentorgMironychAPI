@@ -12,9 +12,11 @@
       <PackageReference Include="Mapster.Async" Version="10.0.12" />
       <PackageReference Include="Mapster.DependencyInjection" Version="10.0.12" />
       <PackageReference Include="MediatR" Version="14.2.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.3.13" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
+      <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="4.8.0" />
     </ItemGroup>
 
 </Project>

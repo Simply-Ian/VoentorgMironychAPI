@@ -13,10 +13,11 @@ builder.Services
     .RegisterMediatR(builder.Configuration)
     .RegisterMarten(builder.Configuration)
     .AddScoped<ICartRepository, MartenCartRepository>()
-    .AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)));
+    .AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)))
+    .AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 app.TurnOnSwagger();
-app.UseMiddleware<GracefulExceptionHandling>();
+app.UseExceptionHandler(_ => { });
 app.MapCarter();
 app.Run();
