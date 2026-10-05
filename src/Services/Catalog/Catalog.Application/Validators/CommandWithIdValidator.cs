@@ -1,7 +1,7 @@
 using Catalog.Application.Commands;
-using Catalog.Application.Handlers;
 using Catalog.Domain.Entities;
 using Catalog.Domain.Repos;
+using Common.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 
@@ -21,9 +21,4 @@ where TEntity: BaseEntity
         ValidationContext<CommandWithId<TEntity>> context, 
         ValidationResult result
     ) => throw new NotFoundException(result.Errors);
-}
-
-public class NotFoundException(IEnumerable<ValidationFailure> errors) : Exception
-{
-    public IEnumerable<ValidationFailure> Errors { get; } = errors;
 }

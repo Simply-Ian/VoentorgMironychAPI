@@ -1,8 +1,9 @@
 using System.Text.Json;
+using Common.Exceptions;
 using FluentValidation;
-using Catalog.Application.Validators; // NotFoundException
+using Microsoft.AspNetCore.Http;
 
-namespace Catalog.API.Middlewares;
+namespace Common.Middlewares;
 
 /// <summary>
 /// Обрабатывает типичные исключения, возникшие при обработке запросов. Отличия от поведения MediatR:
