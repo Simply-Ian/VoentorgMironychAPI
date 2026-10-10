@@ -17,6 +17,7 @@ public class SaveCartCommandValidator : AbstractValidator<SaveCartCommand>
 {
     public SaveCartCommandValidator()
     {
+        RuleFor(x => x.Cart.AccountName).NotEmpty();
         RuleFor(x => x.Cart.Items)
             .NotNull()
             .NotEmpty()
@@ -27,7 +28,7 @@ public class SaveCartCommandValidator : AbstractValidator<SaveCartCommand>
                 .WithMessage((_, item) => $"Item price must be non-negative. Got the value: {item.UnitPrice} for item " +
                                           $"{item.ItemTitle}")
                 .Must(item => item.Quantity > 0)
-                .WithMessage((_, item) => $"Item quantity must not be zero. Got zero for item {item.ItemTitle}")
+                .WithMessage((_, item) => $"Item quantity must be positive. Got {item.Quantity} for item {item.ItemTitle}")
             );
     }
 }
