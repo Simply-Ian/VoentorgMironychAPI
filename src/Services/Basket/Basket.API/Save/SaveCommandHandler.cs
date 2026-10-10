@@ -13,13 +13,12 @@ namespace Basket.API.Save;
 public record SaveCartResult(string AccountName);
 public record SaveCartCommand(ShoppingCart Cart) : ICommand<SaveCartResult>;
 
-public class SaveCartCommandValidator : AbstractValidator<SaveCartCommand>
+internal class SaveCartCommandValidator : AbstractValidator<SaveCartCommand>
 {
     public SaveCartCommandValidator()
     {
         RuleFor(x => x.Cart.AccountName).NotEmpty();
         RuleFor(x => x.Cart.Items)
-            .NotNull()
             .NotEmpty()
             .WithMessage("Cannot store an empty cart")
             .ForEach(
@@ -33,7 +32,7 @@ public class SaveCartCommandValidator : AbstractValidator<SaveCartCommand>
     }
 }
 
-public class SaveCommandHandler(ICartRepository cartRepo) : ICommandHandler<SaveCartCommand, SaveCartResult>
+internal class SaveCommandHandler(ICartRepository cartRepo) : ICommandHandler<SaveCartCommand, SaveCartResult>
 {
     public async Task<SaveCartResult> Handle(SaveCartCommand request, CancellationToken cancellationToken)
     {

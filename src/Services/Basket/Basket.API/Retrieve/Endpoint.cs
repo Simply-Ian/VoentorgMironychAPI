@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Basket.API.Retrieve;
 
-public record GetCartResponse(ShoppingCart Cart)
+internal record GetCartResponse(ShoppingCart Cart)
 {
     public static implicit operator GetCartResponse(GetCartResult handlerResult) 
         => new (handlerResult.Cart);
@@ -23,7 +23,7 @@ public class Endpoint : ICarterModule
         .WithName("Retrieve a saved cart")
         .Produces<GetCartResponse>()
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .WithSummary("Retrieved a previously saved cart, given username")
+        .WithSummary("Retrieve a previously saved cart, given username")
         .WithDescription("Relies on the service's own storage, so in case the user " +
                          "has been deleted it's still possible to retrieve his last saved cart.");
     }
