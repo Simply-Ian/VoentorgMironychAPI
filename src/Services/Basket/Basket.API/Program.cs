@@ -13,6 +13,7 @@ builder.Services
     .RegisterMediatR(builder.Configuration)
     .RegisterMarten(builder.Configuration)
     .AddScoped<ICartRepository, MartenCartRepository>()
+    .RegisterRedisCache(builder.Configuration)
     .AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)))
     .AddExceptionHandler<GlobalExceptionHandler>();
 
