@@ -14,14 +14,14 @@ public class MartenCartRepository(IDocumentSession session) : ICartRepository
     {
         if (!await session.CheckExistsAsync<ShoppingCart>(accountName, ct)) 
             throw new NotFoundException($"ShoppingCart for account {accountName} not found");
-        session.Delete(accountName);
+        session.Delete<ShoppingCart>(accountName);
         await session.SaveChangesAsync(ct);
     }
 
-    public async Task<ShoppingCart> StoreCartAsync(ShoppingCart shoppingCart, CancellationToken ct)
+    public async Task<ShoppingCart> StoreCartAsync(ShoppingCart cart, CancellationToken ct)
     {
-        session.Store(shoppingCart);
+        session.Store(cart);
         await session.SaveChangesAsync(ct);
-        return shoppingCart;
+        return cart;
     }
 }
