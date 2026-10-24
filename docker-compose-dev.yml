@@ -9,5 +9,26 @@
     restart: always
     ports: ["7401:5432"] # Host:container
     volumes: ["postgres_catalog:/var/lib/postgresql/"]
+    
+  basket_db:
+    container_name: basket-db-dev
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '12345'
+      POSTGRES_DB: basket-db
+    restart: always
+    ports: [ "7402:5432" ] # Host:container
+    volumes: [ "postgres_basket:/var/lib/postgresql/" ]
+  
+  basket_redis:
+    container_name: basket-redis-dev
+    image: redis
+    command: redis-server --requirepass "12345" --protected-mode no
+    restart: always
+    ports: [ "7501:6379" ] # Host:container
+    volumes: ["redis_basket:/data"]
 volumes:
   postgres_catalog:
+  postgres_basket:
+  redis_basket:
