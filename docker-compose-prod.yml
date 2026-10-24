@@ -14,7 +14,47 @@
     container_name: catalog-api
     build:
       context: .
-      dockerfile: ./dockerfile-catalog
+      dockerfile: src/Services/Catalog/Dockerfile
     ports: ["7301:8080"]
+    depends_on:
+      - catalog_db
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    
+  basket_db:
+    container_name: basket-db-prod
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: '12345'
+      POSTGRES_DB: basket-db
+    restart: always
+    ports: [ "7412:5432" ] # Host:container
+    volumes: [ "postgres_basket:/var/lib/postgresql/" ]
+
+  basket_redis:
+    container_name: basket-redis-dev
+    image: redis
+    command: redis-server --requirepass "12345" --protected-mode no
+    restart: always
+    ports: [ "7511:6379" ] # Host:container
+    volumes: [ "redis_basket:/data" ]
+  
+  basket_api:
+    container_name: basket-api
+    build:
+      context: .
+      dockerfile: src/Services/Basket/Dockerfile
+    ports: ["7302:8080"]
+    depends_on:
+      - basket_db
+      - basket_redis
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+
 volumes:
   postgres_catalog:
+  postgres_basket:
+  redis_basket:

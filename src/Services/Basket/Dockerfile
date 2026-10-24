@@ -6,10 +6,13 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Basket/Basket.API/Basket.API.csproj", "src/Basket/Basket.API/"]
-RUN dotnet restore "src/Basket/Basket.API/Basket.API.csproj"
+# Кладу в Services/..., чтобы работала относительная ссылка на проект Common в Basket.API.csproj
+COPY ["src/Services/Basket/Basket.API/Basket.API.csproj", "Services/Basket/Basket.API/"]
+COPY ["src/Common/Common.csproj", "Common/"]
+RUN dotnet restore "Services/Basket/Basket.API/Basket.API.csproj"
+WORKDIR /
 COPY . .
-WORKDIR "/src/src/Basket/Basket.API"
+WORKDIR "/src/Services/Basket/Basket.API"
 RUN dotnet build "./Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
