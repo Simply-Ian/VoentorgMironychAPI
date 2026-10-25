@@ -74,21 +74,9 @@ public static class DependencyInjectionExtensions
             opts.Configuration = appConfiguration.GetConnectionString("BasketRedis");
             opts.InstanceName = "cart:";
         });
-        // Развернутая лямбда вместо однострочной регистрации только ради чтения конфигурации
-        services.Decorate<ICartRepository>((repo, provider) =>
-        {
-            var config = provider.GetRequiredService<IConfiguration>();
-            var cache = provider.GetRequiredService<IDistributedCache>();
-            var logger =  provider.GetRequiredService<ILogger<CachingRepository>>();
-            
-            var entryTtl = int.Parse(config.GetRequiredSection("Caching:SlidingTtlSeconds").Value ?? "0");
-            var options = new DistributedCacheEntryOptions
-            {
-                SlidingExpiration = TimeSpan.FromSeconds(entryTtl)
-            };
-            var wrapper = new CachingRepository(repo, cache, options, logger);
-            return wrapper;
-        });
+        services.Configure<DistributedCacheEntryOptions>(appConfiguration.GetSection("Caching"));
+        
+        services.Decorate<ICartRepository, CachingRepository>();
         return services;
     }
 }

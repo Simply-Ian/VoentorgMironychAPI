@@ -19,7 +19,7 @@ public class Endpoint : ICarterModule
         .ProducesProblem(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status204NoContent)
         .WithSummary("Delete a previously saved cart, given username")
-        .WithDescription("Throws 404 if an account with the given name does not exist. The only validation rule is" +
+        .WithDescription("Throws 404 if an account with the given name does not exist. The only validation rule is " +
                          "that accountName must be non-empty.");
     }
 }

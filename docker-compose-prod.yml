@@ -34,7 +34,7 @@
     volumes: [ "postgres_basket:/var/lib/postgresql/" ]
 
   basket_redis:
-    container_name: basket-redis-dev
+    container_name: basket-redis-prod
     image: redis
     command: redis-server --requirepass "12345" --protected-mode no
     restart: always
