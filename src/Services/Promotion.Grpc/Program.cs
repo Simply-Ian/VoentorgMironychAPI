@@ -10,6 +10,6 @@ builder.Services
     );
 
 var app = builder.Build();
-
+await app.SeedDatabase();
 app.MapEndpoints();
 app.Run();
