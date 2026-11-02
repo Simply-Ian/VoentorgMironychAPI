@@ -1,5 +1,9 @@
 using System.Data;
+using Mapster;
+using MapsterMapper;
+using Promotion.Grpc.Interceptors;
 using Promotion.Grpc.Persistence;
+using Promotion.Grpc.Mappers;
 
 namespace Promotion.Grpc;
 
@@ -7,14 +11,17 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection RegisterGrpc(this IServiceCollection services)
     {
-        services.AddGrpc();
+        services.AddGrpc(opts =>
+        {
+            opts.Interceptors.Add<GracefulErrorHadler>();
+        });
         services.AddGrpcReflection();
         return services;
     }
 
     public static void MapEndpoints(this WebApplication app)
     {
-        app.MapGrpcService<GreeterService>();
+        app.MapGrpcService<PromoGrpcService>();
         app.MapGrpcReflectionService();
     }
 
@@ -42,6 +49,12 @@ public static class DependencyInjectionExtensions
             config.RegisterGenericHandlers = true;
             config.RegisterServicesFromAssembly(typeof(DependencyInjectionExtensions).Assembly);
         });
+        return services;
+    }
+    
+    public static IServiceCollection ConfigureMapster(this IServiceCollection services)
+    {
+        TypeAdapterConfig.GlobalSettings.Scan(typeof(DependencyInjectionExtensions).Assembly);
         return services;
     }
 }

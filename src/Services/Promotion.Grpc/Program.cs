@@ -7,7 +7,8 @@ builder.Services
     .RegisterMediatR(builder.Configuration)
     .AddScoped<IDbConnection>(
         _ => new MySqlConnection(builder.Configuration.GetConnectionString("MySql"))
-    );
+    )
+    .ConfigureMapster();
 
 var app = builder.Build();
 await app.SeedDatabase();

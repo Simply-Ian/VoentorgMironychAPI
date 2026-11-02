@@ -41,12 +41,10 @@ public static class DbExtensions
         const string sql =
         """
             create table promos (
-                Id binary(36) primary key,
-                CatalogItemId char(36),
+                CatalogItemId binary(16) primary key,
                 Title text not null,
                 Value decimal(8, 2) not null check(Value >= 0)
             );
-            create index ix_promos_id on promos(Id);
             create index ix_promos_cat_item_id on promos(CatalogItemId);
         """;
         await connection.ExecuteAsync(sql);
@@ -56,9 +54,9 @@ public static class DbExtensions
     {
         const string sql =
             """
-            insert into promos (Id, CatalogItemId, Title, Value) 
-            values (uuid_to_bin(@Id), @CatalogItemId, @Title, @Value) 
+            insert into promos (CatalogItemId, Title, Value) 
+            values (uuid_to_bin(@CatalogItemId), @Title, @Value) 
             """;
-        await connection.ExecuteAsync(sql, promo);
+        await connection.ExecuteAsync(sql, new {CatalogItemId = promo.CatalogItemId.ToString(), Title = promo.Title, Value = promo.Value});
     }
 }
