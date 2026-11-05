@@ -15,5 +15,9 @@ internal class MapperConfigurations : IRegister
         config
             .NewConfig<Promo, PromoDto>()
             .Map(dst => dst.CatalogItemId, src => src.CatalogItemId.ToString());
+        
+        config
+            .NewConfig<PromoDto, Promo>()
+            .Map(dst => dst.CatalogItemId, src => Guid.Parse(src.CatalogItemId)); // is explicit config for Value required?
     }
 }

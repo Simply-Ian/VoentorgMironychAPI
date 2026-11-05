@@ -8,7 +8,6 @@ namespace Promotion.Grpc.Services;
 
 public class PromoGrpcService(ISender mediator) : PromoService.PromoServiceBase
 {
-    // TODO: как документировать?
     public override async Task<PromoDto> GetPromo(GetPromoRequest request, ServerCallContext context)
     {
         GetPromoQuery query;
@@ -32,6 +31,16 @@ public class PromoGrpcService(ISender mediator) : PromoService.PromoServiceBase
         
         var result = await mediator.Send(query);
         return result.Adapt<PromoDto>();
+    }
+
+    public override async Task<Empty> StorePromo(PromoDto request, ServerCallContext context)
+    {
+        StorePromoCommand command = new (request);
+        var operationResult = await mediator.Send(command);
+        context.Status = new(
+            operationResult.InstanceAlreadyExists? StatusCode.AlreadyExists : StatusCode.OK, 
+            "");
+        return new();
     }
 }
         
