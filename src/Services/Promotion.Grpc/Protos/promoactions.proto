@@ -8,6 +8,8 @@ service PromoService {
   
   // Выполняет Upsert объекта промоакции. Возвращает статус-код 0, если запись создается впервые, и 6 - если обновляется
   rpc StorePromo (PromoDto) returns (Empty);
+  
+  rpc DeletePromo(DeletePromoRequest) returns (Empty);
 }
 
 message GetPromoRequest {
@@ -18,6 +20,10 @@ message PromoDto {
   string catalog_item_id = 1;
   string title = 2;
   DecimalValue value = 3;
+}
+
+message DeletePromoRequest {
+  string catalog_item_id = 1;
 }
 
 // Example: 12345.6789 -> { units = 12345, nanos = 678900000 }

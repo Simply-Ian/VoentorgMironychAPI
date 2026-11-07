@@ -42,5 +42,30 @@ public class PromoGrpcService(ISender mediator) : PromoService.PromoServiceBase
             "");
         return new();
     }
+
+    public override async Task<Empty> DeletePromo(DeletePromoRequest request, ServerCallContext context)
+    {
+        DeletePromoCommand command;
+        try
+        {
+            command = request.Adapt<DeletePromoCommand>();
+        }
+        catch (FormatException exc)
+        {
+            throw new ValidationException(
+                $"Validation exception occured", 
+                [
+                    new (
+                        nameof(request.CatalogItemId), 
+                        $"Error when parsing provided Guid: {exc.Message}",
+                        request.CatalogItemId
+                    )
+                ]
+            );
+        }
+        
+        await mediator.Send(command);
+        return new();
+    }
 }
         

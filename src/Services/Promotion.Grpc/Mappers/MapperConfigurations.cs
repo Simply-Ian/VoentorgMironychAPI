@@ -19,5 +19,9 @@ internal class MapperConfigurations : IRegister
         config
             .NewConfig<PromoDto, Promo>()
             .Map(dst => dst.CatalogItemId, src => Guid.Parse(src.CatalogItemId)); // is explicit config for Value required?
+        
+        config
+            .NewConfig<DeletePromoRequest, DeletePromoCommand>()
+            .Map(dst => dst.CatalogItemId, src => Guid.Parse(src.CatalogItemId));
     }
 }

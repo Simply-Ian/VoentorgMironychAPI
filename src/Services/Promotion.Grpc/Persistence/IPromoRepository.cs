@@ -8,4 +8,5 @@ namespace Promotion.Grpc.Persistence;
 public interface IPromoRepository
 {
     public Task<bool> StoreAsync(Promo promo);
+    public Task DeleteAsync(Guid catalogItemId);
 }

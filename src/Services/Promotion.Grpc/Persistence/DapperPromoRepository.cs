@@ -1,4 +1,5 @@
 using System.Data;
+using Common.Exceptions;
 using Dapper;
 using Promotion.Grpc.Models;
 
@@ -26,5 +27,16 @@ public class DapperPromoRepository(IDbConnection connection) : IPromoRepository
         => await connection.QueryFirstAsync<int>(
             "select count(*) from promos where CatalogItemId = @key",
             new { key = key }
-            ) > 0;
+        ) > 0;
+    
+    public async Task DeleteAsync(Guid catalogItemId)
+    {
+        const string sql =
+            """
+            delete from promos where CatalogItemId = @CatalogItemId
+            """;
+        var existingRowWasRemoved = await connection.ExecuteAsync(sql, new { CatalogItemId = catalogItemId }) > 0;
+        if (!existingRowWasRemoved) 
+            throw new NotFoundException($"Промоакция для элемента каталога с Id={catalogItemId} не найдена");
+    }
 }
