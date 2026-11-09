@@ -54,7 +54,36 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Production
 
+  promotion_db:
+    container_name: promotion-db
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: promotion-db
+    restart: always
+    ports: [ "7113:3306" ]
+    volumes: [ "mysql_promotion:/var/lib/mysql" ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p12345678"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+    
+  promotion_api:
+    container_name: promotion-api
+    build:
+      context: .
+      dockerfile: src/Services/Promotion.Grpc/Dockerfile
+    ports: ["7303:8080", "7313:8081"]
+    depends_on:
+      promotion_db:
+        condition: service_healthy  
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+
 volumes:
   postgres_catalog:
   postgres_basket:
   redis_basket:
+  mysql_promotion:

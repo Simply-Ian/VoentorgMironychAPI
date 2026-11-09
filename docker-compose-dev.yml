@@ -28,7 +28,18 @@
     restart: always
     ports: [ "7501:6379" ] # Host:container
     volumes: ["redis_basket:/data"]
+  
+  promotion_db:
+    container_name: promotion-db-dev
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_DATABASE: promotion-db
+    restart: always
+    ports: ["7103:3306"]
+    volumes: ["mysql_promotion:/var/lib/mysql"]
 volumes:
   postgres_catalog:
   postgres_basket:
   redis_basket:
+  mysql_promotion:
