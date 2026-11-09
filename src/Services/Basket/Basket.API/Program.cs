@@ -4,6 +4,7 @@ using Basket.API.Infrastructure;
 using Carter;
 using Common.Middlewares;
 using FluentValidation;
+using Promotion.Grpc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,14 @@ builder.Services
     .RegisterRedisCache(builder.Configuration)
     .AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)))
     .AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddGrpcClient<PromoService.PromoServiceClient>(
+    opts =>
+    {
+        opts.Address = new Uri(
+            builder.Configuration.GetSection("Grpc:PromoServiceUrl").Value!
+        );
+    }
+);
 
 var app = builder.Build();
 app.TurnOnSwagger();

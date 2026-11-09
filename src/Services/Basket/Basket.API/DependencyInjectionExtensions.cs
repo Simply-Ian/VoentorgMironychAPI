@@ -3,7 +3,6 @@ using Basket.API.Infrastructure;
 using Basket.API.Models;
 using Marten;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.OpenApi;
 
 namespace Basket.API;

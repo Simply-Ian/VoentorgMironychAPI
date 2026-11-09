@@ -38,6 +38,18 @@
     restart: always
     ports: ["7103:3306"]
     volumes: ["mysql_promotion:/var/lib/mysql"]
+  
+  promotion_api:
+    container_name: promotion-api-dev
+    build:
+      context: .
+      dockerfile: src/Services/Promotion.Grpc/Dockerfile
+    ports: [ "7003:8080", "7013:8081" ]
+    depends_on:
+      - promotion_db
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
 volumes:
   postgres_catalog:
   postgres_basket:
