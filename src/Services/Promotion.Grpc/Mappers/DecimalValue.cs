@@ -10,10 +10,9 @@ public partial class DecimalValue
     }
     public static implicit operator decimal(DecimalValue grpcDecimal) => grpcDecimal.Units + grpcDecimal.Nanos / NanoFactor;
     
-    public static implicit operator DecimalValue(decimal value)
+    public DecimalValue(decimal value)
     {
-        var units = decimal.ToInt64(value);
-        var nanos = decimal.ToInt32((value - units) * NanoFactor);
-        return new DecimalValue(units, nanos);
+        Units = decimal.ToInt64(value);
+        Nanos = decimal.ToInt32((value - Units) * NanoFactor);
     }
 }

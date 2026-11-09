@@ -1,27 +1,14 @@
 using Mapster;
-using Promotion.Grpc.Features;
 using Promotion.Grpc.Models;
 
 namespace Promotion.Grpc.Mappers;
 
-internal class MapperConfigurations : IRegister
+public class MapperConfigurations : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
         config
-            .NewConfig<GetPromoRequest, GetPromoQuery>()
-            .Map(dst => dst.CatalogItemId, src => Guid.Parse(src.CatalogItemId));
-        
-        config
             .NewConfig<Promo, PromoDto>()
-            .Map(dst => dst.CatalogItemId, src => src.CatalogItemId.ToString());
-        
-        config
-            .NewConfig<PromoDto, Promo>()
-            .Map(dst => dst.CatalogItemId, src => Guid.Parse(src.CatalogItemId)); // is explicit config for Value required?
-        
-        config
-            .NewConfig<DeletePromoRequest, DeletePromoCommand>()
-            .Map(dst => dst.CatalogItemId, src => Guid.Parse(src.CatalogItemId));
+            .Map(dst => dst.Value, src => new DecimalValue(src.Value));
     }
 }
